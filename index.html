@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آینه‌ی حال‌وهوا | Mood Mirror</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="calm">
+    <div id="app">
+        <canvas id="particles"></canvas>
+        <div class="vignette"></div>
+        <div id="veil"></div>
+        <div id="ripple-layer"></div>
+
+        <div class="finder" aria-hidden="true">
+            <span class="corner tl"></span>
+            <span class="corner tr"></span>
+            <span class="corner bl"></span>
+            <span class="corner br"></span>
+        </div>
+
+        <header class="topbar">
+            <div>
+                <p class="brand-en">Mood Mirror</p>
+                <p class="brand-fa">آینه حال</p>
+            </div>
+        </header>
+
+        <main class="content">
+            <p class="scene-index" id="sceneIndex">SCENE 01 / 05</p>
+            <h1 class="title" id="moodTitle">آرام</h1>
+            <p class="subtitle" id="moodLine">نفس بکش. همه‌چیز آهسته می‌شود.</p>
+        </main>
+
+        <nav class="dock" aria-label="انتخاب حال">
+            <div class="moods">
+                <button class="mood-btn active" data-mood="calm">آرام</button>
+                <button class="mood-btn" data-mood="energy">انرژی</button>
+                <button class="mood-btn" data-mood="sad">عمیق</button>
+                <button class="mood-btn" data-mood="relax">ریلکس</button>
+                <button class="mood-btn" data-mood="creative">خلاق</button>
+            </div>
+        </nav>
+
+        <audio id="audio-calm" src="sounds/idoberg-ambient-pads-loop-296968.mp3" loop preload="auto"></audio>
+        <audio id="audio-energy" src="sounds/freesound_community-voice-and-synth-loop-76570.mp3" loop preload="auto"></audio>
+        <audio id="audio-sad" src="sounds/freesound_community-looping-horror-groaning-64518.mp3" loop preload="auto"></audio>
+        <audio id="audio-relax" src="sounds/armotonic-android-forest-loop-559129.mp3" loop preload="auto"></audio>
+        <audio id="audio-creative" src="sounds/dragon-studio-ambient-pads-loop-04-427396.mp3" loop preload="auto"></audio>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
