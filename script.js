@@ -6,6 +6,8 @@ const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let intensity = 0;
 let isHolding = false;
+let muted = false;
+let hintHidden = false;
 let mouse = { x: null, y: null };
 let lastMouse = { x: null, y: null };
 let lastMoveTime = performance.now();
@@ -45,12 +47,18 @@ function pulseByIntensity() {
     });
 
         if (toneReady && toneGain && toneFilter) {
-        const vol = 0.35 + intensity * 0.45 + (isHolding ? 0.15 : 0);
+        const vol = muted ? 0 : (0.35 + intensity * 0.45 + (isHolding ? 0.15 : 0));
         const freq = 700 + intensity * 1800 + (isHolding ? 600 : 0);
 
         toneGain.gain.rampTo(vol, 0.15);
         toneFilter.frequency.rampTo(freq, 0.2);
     }
+
+    const barI = document.getElementById('barIntensity');
+    const barD = document.getElementById('barDepth');
+    if (barI) barI.style.width = Math.round(intensity * 100) + '%';
+    if (barD) barD.style.width = isHolding ? '100%' : '0%';
+
     requestAnimationFrame(pulseByIntensity);
 }
 
@@ -277,6 +285,11 @@ function setMood(moodName) {
     lineEl.textContent = copy.line;
     indexEl.textContent = copy.index;
 
+     const senseMood = document.getElementById('senseMood');
+    if (senseMood && moodCopy[moodName]) {
+        senseMood.textContent = moodCopy[moodName].title;
+    }
+
     [titleEl, lineEl, indexEl].forEach((el) => {
         el.style.animation = "none";
         void el.offsetWidth;
@@ -297,6 +310,70 @@ function setMood(moodName) {
 document.querySelectorAll('.mood-btn').forEach(btn => {
     btn.addEventListener('click', () => setMood(btn.dataset.mood));
 });
+const muteBtn = document.getElementById('muteBtn');
+if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+        muted = !muted;
+        muteBtn.classList.toggle('muted', muted);
+        muteBtn.textContent = muted ? 'بی‌صدا' : 'صدا';
+
+        if (toneReady && toneGain) {
+            toneGain.gain.rampTo(muted ? 0 : (0.35 + intensity * 0.45), 0.2);
+        }
+    });
+}
+function hideHint() {
+    if (hintHidden) return;
+    hintHidden = true;
+    const hint = document.getElementById('hint');
+    if (hint) hint.classList.add('hide');
+}
+
+window.addEventListener('mousemove', hideHint, { once: true });
+window.addEventListener('touchstart', hideHint, { once: true });
+window.addEventListener('click', hideHint, { once: true });
+window.addEventListener('touchmove', (e) => {
+    if (!e.touches[0]) return;
+    const t = e.touches[0];
+    const now = performance.now();
+    const dt = Math.max(now - lastMoveTime, 16);
+
+    if (lastMouse.x !== null) {
+        const dx = t.clientX - lastMouse.x;
+        const dy = t.clientY - lastMouse.y;
+        const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+        const target = Math.min(speed * 8, 1);
+        intensity += (target - intensity) * 0.2;
+    }
+
+    mouse.x = t.clientX;
+    mouse.y = t.clientY;
+    lastMouse.x = t.clientX;
+    lastMouse.y = t.clientY;
+    lastMoveTime = now;
+}, { passive: true });
+
+window.addEventListener('touchstart', (e) => {
+    if (e.target.closest('.mood-btn') || e.target.closest('.mute-btn')) return;
+    if (!e.touches[0]) return;
+
+    isHolding = true;
+    mouse.x = e.touches[0].clientX;
+    mouse.y = e.touches[0].clientY;
+
+    gsap.to('#app', { scale: 1.06, duration: 0.8, ease: 'power2.out' });
+    const veil = document.getElementById('veil');
+    if (veil) veil.classList.add('on');
+}, { passive: true });
+
+window.addEventListener('touchend', () => {
+    lastMouse.x = null;
+    lastMouse.y = null;
+    isHolding = false;
+    const veil = document.getElementById('veil');
+    if (veil) veil.classList.remove('on');
+    gsap.to('#app', { scale: 1, duration: 0.5, ease: 'power2.out' });
+}, { passive: true });
 
 window.addEventListener('mousemove', (e) => {
     const now = performance.now();

@@ -238,3 +238,104 @@ body.creative {
 #app {
     transform-origin: center center;
 }
+.hint {
+    position: absolute;
+    left: 50%;
+    bottom: 100px;
+    transform: translateX(-50%);
+    z-index: 25;
+    font-size: 0.78rem;
+    color: var(--subtle);
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    opacity: 0.85;
+    transition: opacity 0.8s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+.hint.hide {
+    opacity: 0;
+}
+
+.sense {
+    position: absolute;
+    top: 28px;
+    left: 24px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(20, 24, 28, 0.72);
+    backdrop-filter: blur(12px);
+    pointer-events: auto;
+}
+
+.mute-btn {
+    border: 0;
+    background: rgba(255,255,255,0.08);
+    color: var(--fg);
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+}
+.mute-btn:hover { background: rgba(255,255,255,0.14); }
+.mute-btn.muted { opacity: 0.55; }
+
+.sense-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 64px;
+}
+.sense-label {
+    font-size: 0.65rem;
+    color: var(--subtle);
+}
+.sense-bar {
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.1);
+    overflow: hidden;
+}
+.sense-bar i {
+    display: block;
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: rgba(255,255,255,0.75);
+    transition: width 0.15s ease;
+}
+
+.sense-mood {
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding-right: 4px;
+}
+
+@media (max-width: 600px) {
+    .sense {
+        top: auto;
+        bottom: 90px;
+        left: 12px;
+        right: 12px;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+    .hint {
+        bottom: 150px;
+        font-size: 0.7rem;
+        white-space: normal;
+        max-width: 90%;
+    }
+    .topbar {
+        right: 16px;
+        top: 16px;
+    }
+}
